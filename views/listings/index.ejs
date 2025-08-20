@@ -1,0 +1,102 @@
+<% layout("/layouts/boilerplate") -%>
+
+<body>
+  <h2>All Lounges</h2>
+
+  <div class="container my-4">
+    <div class="row g-4 align-items-start">
+      <!-- Search input -->
+      <div class="col-md-6">
+        <input
+          type="text"
+          id="searchInput"
+          class="form-control"
+          placeholder="Search by name or location"
+          value="<%= query?.q || '' %>"
+        />
+      </div>
+
+      <!-- Max price and count -->
+      <div class="col-md-6 d-flex flex-column">
+        <label for="maxPriceInput" class="form-label fw-bold mb-2">
+          Max Price: ₹<span id="maxPriceDisplay"><%= query?.maxPrice || 10000 %></span>
+        </label>
+        <input
+          type="range"
+          id="maxPriceInput"
+          class="form-range mb-2"
+          min="0"
+          max="10000"
+          step="100"
+          value="<%= query?.maxPrice || 10000 %>"
+        />
+        <small>Total Hotels: <b><%= count %></b></small>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS for filter -->
+  <script>
+    const searchInput = document.getElementById("searchInput");
+    const maxPriceInput = document.getElementById("maxPriceInput");
+    const maxPriceDisplay = document.getElementById("maxPriceDisplay");
+
+    maxPriceInput.addEventListener("input", () => {
+      maxPriceDisplay.textContent = maxPriceInput.value;
+    });
+
+    function debounce(fn, delay) {
+      let timer;
+      return function (...args) {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn.apply(this, args), delay);
+      };
+    }
+
+    function updateFilters() {
+      const q = searchInput.value.trim();
+      const max = maxPriceInput.value;
+
+      const params = new URLSearchParams();
+      if (q) params.set("q", q);
+      if (max < 10000) params.set("maxPrice", max);
+
+      window.location.href = `/listing?${params.toString()}`;
+    }
+
+    searchInput.addEventListener("input", debounce(updateFilters, 500));
+    maxPriceInput.addEventListener("change", updateFilters);
+  </script>
+
+  <!-- Listings -->
+  <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
+    <% for (let l of list) { %>
+      <div class="col mb-4">
+        <div class="card">
+          <a href="/listing/<%= l._id %>" class="list-link">
+            <img
+              src="<%= l.image.url %>"
+              class="card-img-top"
+              style="height: 20rem;"
+              alt="<%= l.title %>"
+            />
+          </a>
+          <div class="card-body">
+            <h5 class="card-title"><%= l.title %></h5>
+            <p class="card-text">₹ <%= l.price.toLocaleString("en-IN") %> / night</p>
+
+            <% if (user) { %>
+              <form action="/favorites/<%= user.favorites.includes(l._id) ? 'remove' : 'add' %>/<%= l._id %>" method="POST">
+                <button type="submit" class="btn btn-sm <%= user.favorites.includes(l._id) ? 'btn-danger' : 'btn-outline-primary' %>">
+                  <%= user.favorites.includes(l._id) ? 'Remove Favorite' : 'Add to Favorites' %>
+                </button>
+              </form>
+            <% } else { %>
+              <a href="/user/login" class="btn btn-sm btn-outline-secondary">Login to Favorite</a>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</body>

@@ -1,0 +1,187 @@
+<% layout("/layouts/boilerplate") -%>
+<body>
+  <div>
+    <!-- card -->
+    <div
+      class="card shadow-sm rounded-3 border-0 mt-5 mx-auto"
+      style="max-width: 1000px; font-size: 1.3rem; height: auto"
+    >
+      <div class="row g-4 align-items-center" style="min-height: 400px">
+        <!-- Image -->
+        <div class="col-md-5" style="height: 400px">
+          <div
+            style="
+              width: 100%;
+              height: 100%;
+              overflow: hidden;
+              border-radius: 1rem;
+            "
+          >
+            <img
+              src="<%= hotel.image.url %>"
+              alt="Hotel Image"
+              class="img-fluid"
+              style="width: 100%; height: 100%; object-fit: cover"
+            />
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div
+          class="col-md-7 p-5 d-flex flex-column justify-content-center"
+          style="font-size: 1.4rem"
+        >
+          <h3 class="fw-bold mb-4" style="font-size: 2.5rem">
+            <%= hotel.title %>
+          </h3>
+          <p class="text-secondary mb-5" style="line-height: 1.7">
+            <%= hotel.description %>
+          </p>
+
+          <div class="mb-5" style="font-size: 1.4rem">
+            <div class="mb-3">
+              <strong>Price:</strong> ₹ <%= hotel.price.toLocaleString("en-IN")
+              %>
+            </div>
+            <div class="mb-3">
+              <strong>Location:</strong> <%= hotel.location %>
+            </div>
+            <div><strong>Country:</strong> <%= hotel.country %></div>
+
+            <div>
+             <a href="/listing/<%= hotel._id %>/book" class="btn btn-success my-3">Book Now</a>
+
+            </div>
+          </div>
+          <% if(currentUser && hotel.owner._id.equals(currentUser._id)){ %>
+          <div class="d-flex gap-4">
+            <a
+              href="/listing/<%= hotel._id %>/edit"
+              class="btn btn-primary btn-lg"
+            >
+              Edit
+            </a>
+            <form
+              action="/listing/<%= hotel._id %>/delete?_method=DELETE"
+              method="POST"
+              onsubmit="return confirm('Are you sure you want to delete this listing?');"
+            >
+              <button type="submit" class="btn btn-danger btn-lg">
+                Delete
+              </button>
+            </form>
+          </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+    <hr />
+    <!-- Review -->
+    <div class="container mt-5" style="max-width: 63rem">
+      <!-- Review Form -->
+      <% if(currentUser){ %>
+      <form
+        class="w-100 w-lg-50 mx-auto needs-validation"
+        action="/listing/<%= hotel.id %>/review"
+        method="post"
+        novalidate
+      >
+        <h4 class="mb-4 text-center">Leave a Review</h4>
+
+        <!-- Review Text -->
+        <div class="mb-3">
+          <label for="comment" class="form-label fs-5">Your Review</label>
+          <textarea
+            id="comment"
+            name="comment"
+            class="form-control fs-4"
+            rows="4"
+            required
+          ></textarea>
+          <div class="invalid-feedback">Please enter your review.</div>
+        </div>
+
+        <!-- Rating -->
+        <div class="mb-3">
+          <label for="rating" class="form-label fs-5">Rating</label>
+          <fieldset class="starability-grow">
+            <input
+              type="radio"
+              id="no-rate"
+              class="input-no-rate"
+              name="rating"
+              value="1"
+              aria-label="No rating."
+            />
+            <input type="radio" id="first-rate1" name="rating" value="1" />
+            <label for="first-rate1" title="Terrible">1 star</label>
+            <input type="radio" id="first-rate2" name="rating" value="2" />
+            <label for="first-rate2" title="Not good">2 stars</label>
+            <input type="radio" id="first-rate3" name="rating" value="3" />
+            <label for="first-rate3" title="Average">3 stars</label>
+            <input type="radio" id="first-rate4" name="rating" value="4" />
+            <label for="first-rate4" title="Very good">4 stars</label>
+            <input type="radio" id="first-rate5" name="rating" value="5" />
+            <label for="first-rate5" title="Amazing">5 stars</label>
+          </fieldset>
+        </div>
+
+        <!-- Submit -->
+        <div class="text-center">
+          <button type="submit" class="btn btn-success px-4 fs-5">
+            Submit Review
+          </button>
+        </div>
+      </form>
+
+      <%} %>
+
+      <!-- Review List -->
+      <div class="mt-5 mb-5">
+        <% if (hotel.reviews && hotel.reviews.length > 0) { %>
+        <hr />
+        <h4 class="mb-4">Reviews</h4>
+        <div class="row">
+          <% hotel.reviews.forEach(review => { %>
+          <div class="col-12 col-lg-6 mb-4">
+            <li class="border rounded p-3 h-100 list-unstyled">
+              <div>
+                <strong class="fs-4"> @<%= review.author.username %> </strong>
+              </div>
+              <p class="mb-1 fs-5 fw-normal"><%= review.comment %></p>
+              <div class="d-flex align-items-center">
+                <p
+                  class="starability-result"
+                  data-rating="<%= review.rating %>"
+                ></p>
+              </div>
+
+              <small class="text-muted d-block fs-6">
+                Reviewed on: <%= new Date(review.createdAt).toLocaleDateString()
+                %>
+              </small>
+
+              <!-- Delete Button Form -->
+              <%if(currentUser && review.author._id.equals(currentUser._id)){%>
+              <form
+                action="/listing/<%= hotel._id %>/review/<%= review._id %>?_method=DELETE"
+                method="POST"
+                onsubmit="return confirm('Are you sure you want to delete this review?');"
+              >
+                <button type="submit" class="btn btn-sm btn-outline-danger">
+                  Delete Review
+                </button>
+              </form>
+              <%}%>
+            </li>
+          </div>
+          <% }) %>
+        </div>
+        <% } else { %>
+        <p class="fs-5">No reviews yet. Be the first to review!</p>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</body>

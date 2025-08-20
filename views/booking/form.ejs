@@ -1,0 +1,71 @@
+<% layout("/layouts/boilerplate") -%>
+
+<h2 class="mb-4 text-center">Book Lounge: <%= lounge.title %></h2>
+
+<form
+  action="/listing/<%= lounge._id %>/book"
+  method="POST"
+  class="needs-validation mx-auto p-4 border rounded shadow-sm"
+  style="max-width: 480px"
+  novalidate
+>
+  <div class="mb-4">
+    <label for="date" class="form-label fw-semibold">
+      <i class="bi bi-calendar-event-fill me-2"></i>Select Date
+    </label>
+    <input
+      type="date"
+      class="form-control"
+      id="date"
+      name="date"
+      min="<%= new Date().toISOString().split('T')[0] %>"
+      required
+    />
+    <div class="invalid-feedback">
+      Please select a valid booking date (today or later).
+    </div>
+  </div>
+
+  <div class="mb-4">
+    <label for="guests" class="form-label fw-semibold">
+      <i class="bi bi-people-fill me-2"></i>Number of Guests
+    </label>
+    <input
+      type="number"
+      class="form-control"
+      id="guests"
+      name="guests"
+      min="1"
+      max="6"
+      placeholder="Enter number between 1 and 6"
+      required
+    />
+    <div class="invalid-feedback">
+      Please enter the number of guests (between 1 and 6).
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
+    Book Now
+  </button>
+</form>
+
+<script>
+  (() => {
+    "use strict";
+    const forms = document.querySelectorAll(".needs-validation");
+    Array.from(forms).forEach((form) => {
+      form.addEventListener(
+        "submit",
+        (event) => {
+          if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add("was-validated");
+        },
+        false
+      );
+    });
+  })();
+</script>

@@ -1,0 +1,109 @@
+<% layout("/layouts/boilerplate") -%>
+<body>
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        <div class="card shadow border-0">
+          <div class="card-header bg-primary text-white text-center">
+            <h4 class="mb-0">Create a New Lounge</h4>
+          </div>
+          <div class="card-body p-4">
+            <form
+              action="/listing"
+              method="POST"
+              class="needs-validation"
+              enctype="multipart/form-data"
+              novalidate
+            >
+              <div class="mb-4">
+                <label for="title" class="form-label">Title</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="title"
+                  name="title"
+                  placeholder="Enter listing title"
+                  required
+                />
+                <div class="invalid-feedback">Please enter a title.</div>
+              </div>
+
+              <div class="mb-4">
+                <label for="description" class="form-label">Description</label>
+                <textarea
+                  class="form-control"
+                  id="description"
+                  name="description"
+                  placeholder="Write a short description"
+                  rows="3"
+                  required
+                ></textarea>
+                <div class="invalid-feedback">Please enter a description.</div>
+              </div>
+
+              <div class="mb-4">
+                <label for="image" class="form-label">Upload Image</label>
+                <input
+                  type="file"
+                  class="form-control"
+                  id="image"
+                  name="image"
+                />
+
+                <div class="invalid-feedback">Please enter a valid URL.</div>
+              </div>
+
+              <div class="mb-4">
+                <label for="price" class="form-label">Price (IND)</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="price"
+                  name="price"
+                  placeholder="Enter price"
+                  min="0"
+                  required
+                />
+                <div class="invalid-feedback">
+                  Please enter a valid price (0 or more).
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <label for="location" class="form-label">Location</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="location"
+                  name="location"
+                  placeholder="City or region"
+                  required
+                />
+                <div class="invalid-feedback">Please enter a location.</div>
+              </div>
+
+              <div class="mb-4">
+                <label for="country" class="form-label">Country</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="country"
+                  name="country"
+                  placeholder="Country name"
+                  required
+                />
+                <div class="invalid-feedback">Please enter a country.</div>
+              </div>
+
+              <div class="d-grid mt-4">
+                <button type="submit" class="btn btn-success btn-lg">
+                  Submit Listing
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

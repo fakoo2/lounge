@@ -1,0 +1,116 @@
+<% layout("/layouts/boilerplate") -%>
+<body>
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        <div class="card shadow border-0">
+          <div class="card-header bg-warning text-dark text-center">
+            <h4 class="mb-0">Edit Listing</h4>
+          </div>
+          <div class="card-body p-4">
+            <form
+              action="/listing/<%= hotel._id %>/update?_method=PATCH"
+              method="POST"
+              class="needs-validation"
+              enctype="multipart/form-data"
+              novalidate
+            >
+              <div class="mb-4">
+                <label for="title" class="form-label">Title</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="title"
+                  name="title"
+                  value="<%= hotel.title %>"
+                  placeholder="Enter listing title"
+                  required
+                />
+                <div class="invalid-feedback">Please enter a title.</div>
+              </div>
+
+              <div class="mb-4">
+                <label for="description" class="form-label">Description</label>
+                <textarea
+                  class="form-control"
+                  id="description"
+                  name="description"
+                  placeholder="Enter description"
+                  rows="3"
+                  required
+                >
+<%= hotel.description %></textarea
+                >
+                <div class="invalid-feedback">Please enter a description.</div>
+              </div>
+
+              <div class="mb-3">
+                <img src="<%= originalUrl %>" alt="image" height="250px" width="400px">
+              </div>
+              <div class="mb-4">
+                <label for="image" class="form-label">Image URL</label>
+                <input
+                  type="file"
+                  class="form-control"
+                  id="image"
+                  name="image"
+                />
+              </div>
+
+              <div class="mb-4">
+                <label for="price" class="form-label">Price (IND)</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="price"
+                  name="price"
+                  value="<%= hotel.price %>"
+                  min="0"
+                  placeholder="Enter price"
+                  required
+                />
+                <div class="invalid-feedback">
+                  Please enter a valid price (0 or more).
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <label for="location" class="form-label">Location</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="location"
+                  name="location"
+                  value="<%= hotel.location %>"
+                  placeholder="City or region"
+                  required
+                />
+                <div class="invalid-feedback">Please enter a location.</div>
+              </div>
+
+              <div class="mb-4">
+                <label for="country" class="form-label">Country</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="country"
+                  name="country"
+                  value="<%= hotel.country %>"
+                  placeholder="Country name"
+                  required
+                />
+                <div class="invalid-feedback">Please enter a country.</div>
+              </div>
+
+              <div class="d-grid mt-4">
+                <button type="submit" class="btn btn-primary btn-lg">
+                  Update Listing
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

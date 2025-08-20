@@ -1,0 +1,109 @@
+<% layout("/layouts/boilerplate") -%>
+
+<h1 class="mb-4 text-center">My Bookings</h1>
+
+<% if (bookings.length === 0) { %>
+<div class="alert alert-info text-center" role="alert">
+  You have no bookings yet.
+</div>
+<% } else { %>
+<div class="row row-cols-1 row-cols-md-2 g-4">
+  <% bookings.forEach(booking => { %>
+  <div class="col">
+    <div class="card shadow-sm rounded-3 h-100" style="overflow: hidden">
+      <% if (booking.lounge.image && booking.lounge.image.url) { %>
+      <img
+        src="<%= booking.lounge.image.url %>"
+        class="card-img-top"
+        alt="<%= booking.lounge.title %> Image"
+        style="
+          height: 200px;
+          object-fit: cover;
+          border-top-left-radius: 12px;
+          border-top-right-radius: 12px;
+        "
+      />
+      <% } else { %>
+
+      <div
+        class="bg-secondary d-flex align-items-center justify-content-center text-white"
+        style="
+          height: 200px;
+          border-top-left-radius: 12px;
+          border-top-right-radius: 12px;
+        "
+      >
+        <i class="bi bi-image fs-1"></i>
+      </div>
+      <% } %>
+
+      <div class="card-body p-4 d-flex flex-column">
+        <h5 class="card-title fw-bold mb-3"><%= booking.lounge.title %></h5>
+        <p class="text-muted mb-2">
+          <i class="bi bi-geo-alt-fill me-1"></i><%= booking.lounge.location %>
+        </p>
+        <p
+          class="card-text flex-grow-1"
+          style="font-size: 0.95rem; color: #555; margin-bottom: 1.5rem"
+        >
+          <%= booking.lounge.description.length > 120 ?
+          booking.lounge.description.substring(0, 117) + '...' :
+          booking.lounge.description %>
+        </p>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <span class="badge bg-primary fs-6 p-2">
+            <i class="bi bi-currency-dollar me-1"></i><%= booking.lounge.price
+            %>/night
+          </span>
+          <span class="badge bg-info text-dark fs-6 p-2">
+            <i class="bi bi-people-fill me-1"></i>Guests: <%= booking.guests %>
+          </span>
+        </div>
+
+        <hr class="my-3" />
+
+        <p class="mb-0 fw-semibold">
+          <i class="bi bi-calendar-check me-1"></i>Booking Date: <%=
+          booking.date.toDateString() %>
+        </p>
+      </div>
+      <form
+        action="/listing/<%= booking.lounge._id %>/cancel/<%= booking._id %>?_method=DELETE"
+        method="POST"
+        onsubmit="return confirm('Are you sure you want to cancel this booking?');"
+      >
+        <div
+          class="card-footer bg-light text-center fst-italic rounded-bottom-3 py-2"
+        >
+          <form
+            action="/listing/<%= booking.lounge._id %>/cancel/<%= booking._id %>?_method=DELETE"
+            method="POST"
+            onsubmit="return confirm('Are you sure you want to cancel this booking?');"
+          >
+            <button type="submit" class="btn btn-danger btn-sm ms-3">
+              Cancel Booking
+            </button>
+          </form>
+        </div>
+      </form>
+
+      <div
+        class="card-footer bg-light text-center fst-italic rounded-bottom-3 py-2"
+      >
+        Booked by You
+      </div>
+    </div>
+  </div>
+  <% }) %>
+</div>
+<% } %>
+
+<link
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+  rel="stylesheet"
+/>
+<link
+  href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+  rel="stylesheet"
+/>
